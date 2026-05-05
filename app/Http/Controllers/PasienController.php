@@ -2,63 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pasien;
 use Illuminate\Http\Request;
 
 class PasienController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('pasien.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Pasien::create([
+            'no_rekam_medis' => $request->no_rekam_medis,
+            'nama_pasien' => $request->nama_pasien,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'umur' => $request->umur,
+        ]);
+
+        return redirect()->route('pasien.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function index()
     {
-        //
+        $pasien = Pasien::all();
+        return view('pasien.index', compact('pasien'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // EDIT
+    public function edit($id)
     {
-        //
+        $pasien = Pasien::findOrFail($id);
+        return view('pasien.edit', compact('pasien'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // UPDATE
+    public function update(Request $request, $id)
     {
-        //
+        $pasien = Pasien::findOrFail($id);
+
+        $pasien->update([
+            'no_rekam_medis' => $request->no_rekam_medis,
+            'nama_pasien' => $request->nama_pasien,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'umur' => $request->umur
+        ]);
+
+        return redirect('/pasien');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // DELETE
+    public function destroy($id)
     {
-        //
+        $pasien = Pasien::findOrFail($id);
+        $pasien->delete();
+
+        return redirect('/pasien');
     }
 }
